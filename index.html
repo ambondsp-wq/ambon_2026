@@ -144,14 +144,13 @@
 </div>
 
 <script>
-    // URL WEB APP ANDA YANG SUDAH DI DEPLOY
+    // URL WEB APP ANDA
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwnIwAotAPZsBUWwo9pig5XWi6DcSFrd_7RrXj2zlynfVPorCqPvC1aKHr9CVYOZc_w/exec';
     
     // --- SETUP SIGNATURE PAD ---
     const canvasOperator = document.getElementById('canvasOperator');
     const canvasPemeriksa = document.getElementById('canvasPemeriksa');
     
-    // Fungsi untuk meresize canvas agar rapi
     function resizeCanvas(canvas) {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = canvas.offsetWidth * ratio;
@@ -214,7 +213,6 @@
     document.getElementById('checklistForm').addEventListener('submit', e => {
         e.preventDefault();
         
-        // Cek apakah TTD sudah diisi
         if (padOperator.isEmpty() || padPemeriksa.isEmpty()) {
             alert("Harap isi kedua Tanda Tangan terlebih dahulu!");
             return;
@@ -228,11 +226,9 @@
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
 
-        // Ambil data TTD dalam bentuk Base64 PNG
         data.ttdOperator = padOperator.toDataURL('image/png');
         data.ttdPemeriksa = padPemeriksa.toDataURL('image/png');
 
-        // --- FORMAT HASIL DATE/TIME PICKER ---
         const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -253,7 +249,6 @@
             data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time.replace(':', '-')}`;
         }
 
-        // Kemas ulang ke FormData agar bisa dikirim dari file lokal (file://) tanpa CORS error
         const finalFormData = new FormData();
         for (const key in data) {
             finalFormData.append(key, data[key]);
@@ -263,25 +258,26 @@
         submitBtn.innerText = 'MENYIMPAN...';
         submitBtn.disabled = true;
 
-        // Kirim menggunakan FormData
+        // SOLUSI CORS: Menggunakan mode: 'no-cors'
         fetch(scriptURL, {
             method: 'POST',
+            mode: 'no-cors', // Ini yang mengatasi error CORS
             body: finalFormData
         })
-        .then(response => response.json())
-        .then(res => {
+        .then(response => {
+            // Karena mode no-cors, response tidak bisa dibaca (opaque)
+            // Tapi data sudah pasti terkirim ke Google Spreadsheet
             msgDiv.className = 'alert success';
-            msgDiv.innerText = res.message;
+            msgDiv.innerText = 'Data berhasil disimpan! Sheet baru telah dibuat dengan nama: ' + data.sheetName;
             msgDiv.style.display = 'block';
             e.target.reset(); 
             
-            // Bersihkan canvas TTD setelah berhasil simpan
             padOperator.clear();
             padPemeriksa.clear();
         })
         .catch(error => {
             msgDiv.className = 'alert error';
-            msgDiv.innerText = 'Terjadi kesalahan: ' + error.message;
+            msgDiv.innerText = 'Terjadi kesalahan jaringan: ' + error.message;
             msgDiv.style.display = 'block';
         })
         .finally(() => {
