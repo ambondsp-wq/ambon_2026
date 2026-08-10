@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Pemeriksaan Forklift</title>
+    <!-- Library untuk TTD Canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2, h3, h4 { color: #0056b3; text-align: center; }
+        .header-info { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+        .form-group { flex: 1 1 45%; display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+        th { background-color: #0056b3; color: white; }
+        .category-row { background-color: #e9ecef; font-weight: bold; }
+        .btn-submit { background: #28a745; color: white; border: none; padding: 15px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 20px; font-weight: bold;}
+        .btn-submit:hover { background: #218838; }
+        .alert { padding: 15px; margin-top: 20px; border-radius: 5px; display: none; text-align: center; font-weight: bold;}
+        .alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+        .alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; display: block; }
+        .emisi-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 20px; }
+        .nab-text { font-size: 13px; color: #6c757d; display: flex; align-items: center; height: 100%; padding-top: 25px;}
+        
+        /* CSS untuk Signature Pad */
+        .signature-box { border: 2px dashed #ccc; border-radius: 5px; margin-top: 5px; position: relative; background: #fff; }
+        canvas { width: 100%; height: 150px; cursor: crosshair; }
+        .btn-clear { position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PT. PERTAMINA LUBRICANTS - DSP AMBON</h1>
+    <h2>CHECK LIST PEMERIKSAAN FORKLIFT</h2>
+    
+    <form id="checklistForm">
+        <div class="header-info">
+            <div class="form-group">
+                <label>Bulan</label>
+                <input type="month" name="bulan" id="bulanInput" required>
+            </div>
+            <div class="form-group">
+                <label>Hari / Tanggal & Waktu</label>
+                <input type="datetime-local" name="hariTanggal" id="tanggalInput" required>
+            </div>
+            <div class="form-group">
+                <label>Model</label>
+                <input type="text" name="model" required>
+            </div>
+            <div class="form-group">
+                <label>Nomor</label>
+                <input type="text" name="nomor" required>
+            </div>
+            <div class="form-group">
+                <label>Seri</label>
+                <input type="text" name="seri" required>
+            </div>
+            <div class="form-group">
+                <label>Merk (Type) / Tahun</label>
+                <input type="text" name="merkTahun" required>
+            </div>
+            <div class="form-group">
+                <label>Nama Perusahaan (PT/CV)</label>
+                <input type="text" name="perusahaan" required>
+            </div>
+            <div class="form-group">
+                <label>Jam Dinas</label>
+                <input type="time" name="jamDinas" id="jamDinas" required>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 45%;">Rincian Pemeriksaan</th>
+                    <th style="width: 50%;">Kondisi (Beri Tanda √)</th>
+                </tr>
+            </thead>
+            <tbody id="checklistBody"></tbody>
+        </table>
+
+        <!-- FORM UJI EMISI -->
+        <div class="emisi-box">
+            <h3 style="text-align: left; margin-top: 0;">HASIL UJI EMISI FORKLIFT</h3>
+            <p style="margin-top: 0; font-weight: bold; font-size: 14px;">REF : KEPMENLH NO. KEP-35/MENLH/10/1993</p>
+            
+            <h4 style="text-align: left; margin-bottom: 10px;">Bahan Bakar Bensin</h4>
+            <div class="header-info">
+                <div class="form-group">
+                    <label>CO (%)</label>
+                    <input type="number" step="0.01" name="emisiCO" placeholder="Contoh: 3.5">
+                </div>
+                <div class="nab-text">NAB. CO Max. 4,5 %</div>
+                <div class="form-group">
+                    <label>HC (ppm)</label>
+                    <input type="number" step="1" name="emisiHC" placeholder="Contoh: 900">
+                </div>
+                <div class="nab-text">NAB. HC Max. 1.200 ppm</div>
+            </div>
+
+            <h4 style="text-align: left; margin-bottom: 10px; margin-top: 15px;">Bahan Bakar Solar</h4>
+            <div class="header-info">
+                <div class="form-group">
+                    <label>Asap (%)</label>
+                    <input type="number" step="0.1" name="emisiAsap" placeholder="Contoh: 40">
+                </div>
+                <div class="nab-text">NAB Max. 50 %</div>
+            </div>
+        </div>
+
+        <!-- FORM TANDA TANGAN -->
+        <h3 style="text-align: left; margin-top: 20px;">Persetujuan & Tanda Tangan</h3>
+        <div class="header-info">
+            <div class="form-group">
+                <label>Nama Operator</label>
+                <input type="text" name="namaOperator" required>
+                <label style="margin-top: 10px;">TTD Operator (Gambar di bawah ini)</label>
+                <div class="signature-box">
+                    <button type="button" class="btn-clear" onclick="clearPad('canvasOperator')">Hapus</button>
+                    <canvas id="canvasOperator"></canvas>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Nama Pemeriksa (Pts. K3LL)</label>
+                <input type="text" name="namaPemeriksa" required>
+                <label style="margin-top: 10px;">TTD Pemeriksa (Gambar di bawah ini)</label>
+                <div class="signature-box">
+                    <button type="button" class="btn-clear" onclick="clearPad('canvasPemeriksa')">Hapus</button>
+                    <canvas id="canvasPemeriksa"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">SIMPAN DATA CHECKLIST</button>
+    </form>
+
+    <div id="responseMessage" class="alert"></div>
+</div>
+
+<script>
+    // GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyjO9KUHUppCYp6r3-ZvrYEUKXFAFSYyMXpyJKxY0zMwZMcxRQHZRlgl-SKOwh2HQWM/exec';
+    
+    // --- SETUP SIGNATURE PAD ---
+    const canvasOperator = document.getElementById('canvasOperator');
+    const canvasPemeriksa = document.getElementById('canvasPemeriksa');
+    
+    // Fungsi untuk meresize canvas agar rapi
+    function resizeCanvas(canvas) {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+    }
+
+    resizeCanvas(canvasOperator);
+    resizeCanvas(canvasPemeriksa);
+
+    const padOperator = new SignaturePad(canvasOperator);
+    const padPemeriksa = new SignaturePad(canvasPemeriksa);
+
+    function clearPad(id) {
+        if(id === 'canvasOperator') padOperator.clear();
+        if(id === 'canvasPemeriksa') padPemeriksa.clear();
+    }
+
+    // --- SETUP TABEL CHECKLIST ---
+    const checklistData = [
+        { category: "1. MOTOR", items: ["a. Safety Switch", "b. Starter", "c. Switch tertutup"], names: ["motor_safety_switch", "motor_starter", "motor_switch_tertutup"] },
+        { category: "2. KNALPOT", items: ["a. Kondisi fisik", "b. Flame Trap/saringan"], names: ["knalpot_fisik", "knalpot_flame_trap"] },
+        { category: "3. KABEL/LISTRIK", items: ["a. Semua aliran tertutup", "b. Klakson tertutup"], names: ["kabel_aliran", "kabel_klakson"] },
+        { category: "4. LAMPU", items: ["a. Sekering (fuse) arus asli", "b. Lampu besar", "c. Lampu kecil", "d. Lampu rem", "e. Lampu Sign"], names: ["lampu_sekering", "lampu_besar", "lampu_kecil", "lampu_rem", "lampu_sign"] },
+        { category: "5. ACCU", items: ["a. Kutub/pool baut klem (+/-)", "b. Kabel dari kutub/pool (+/-)", "c. Tutup Accu"], names: ["accu_kutub", "accu_kabel", "accu_tutup"] },
+        { category: "6. ALAT PEMADAM API RINGAN (APAR)", items: ["a. Dry Chemical Powder (DCP)", "b. CO2"], names: ["apar_dcp", "apar_co2"] },
+        { category: "7. RODA / BAN", items: ["a. Tidak gundul/keluar kembangnya", "b. Ban serep/cadangan"], names: ["roda_ban", "roda_serep"] },
+        { category: "8. REM", items: ["a. Kiri/kanan bekerja seketika", "b. Hand rem bekerja seketika"], names: ["rem_kiri_kanan", "rem_hand"] },
+        { category: "9. STIR", items: ["Olah gerak maksimum 60 derajat"], names: ["stir_olah_gerak"] },
+        { category: "10. TAMBAHAN", items: ["a. Tulisan Dilarang Merokok", "b. Tulisan Maximum Kecepatan", "c. Tulisan Kapasitas Max.", "d. Tulisan Dilarang Menumpang", "e. Sirine", "f. Kebersihan"], names: ["tambahan_merokok", "tambahan_kecepatan", "tambahan_kapasitas", "tambahan_menumpang", "tambahan_sirine", "tambahan_kebersihan"] }
+    ];
+
+    const tbody = document.getElementById('checklistBody');
+    let no = 1;
+
+    checklistData.forEach(group => {
+        let catRow = document.createElement('tr');
+        catRow.className = 'category-row';
+        catRow.innerHTML = `<td colspan="3">${group.category}</td>`;
+        tbody.appendChild(catRow);
+
+        group.items.forEach((item, index) => {
+            let row = document.createElement('tr');
+            let radioName = group.names[index];
+            
+            let radios = `
+                <div style="display:flex; gap:15px;">
+                    <label><input type="radio" name="${radioName}" value="BAIK" required> Baik</label>
+                    <label><input type="radio" name="${radioName}" value="CUKUP"> Cukup</label>
+                    <label><input type="radio" name="${radioName}" value="RUSAK"> Rusak</label>
+                    <label><input type="radio" name="${radioName}" value="TIDAK ADA"> Tidak Ada</label>
+                </div>
+            `;
+            row.innerHTML = `<td>${no++}</td><td>${item}</td><td>${radios}</td>`;
+            tbody.appendChild(row);
+        });
+    });
+
+    // --- HANDLE FORM SUBMIT ---
+    document.getElementById('checklistForm').addEventListener('submit', e => {
+        e.preventDefault();
+        
+        // Cek apakah TTD sudah diisi
+        if (padOperator.isEmpty() || padPemeriksa.isEmpty()) {
+            alert("Harap isi kedua Tanda Tangan terlebih dahulu!");
+            return;
+        }
+
+        const msgDiv = document.getElementById('responseMessage');
+        msgDiv.className = 'alert';
+        msgDiv.style.display = 'none';
+        msgDiv.innerText = '';
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        // Ambil data TTD dalam bentuk Base64 PNG
+        data.ttdOperator = padOperator.toDataURL('image/png');
+        data.ttdPemeriksa = padPemeriksa.toDataURL('image/png');
+
+        // --- FORMAT HASIL DATE/TIME PICKER ---
+        const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        if(data.bulan) {
+            let [year, month] = data.bulan.split('-');
+            data.bulan = `${monthNames[parseInt(month)-1]} ${year}`;
+        }
+
+        if(data.hariTanggal) {
+            let dt = new Date(data.hariTanggal);
+            let day = dayNames[dt.getDay()];
+            let date = dt.getDate();
+            let month = monthNames[dt.getMonth()];
+            let year = dt.getFullYear();
+            let time = `${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;
+            
+            data.hariTanggal = `${day}, ${date} ${month} ${year} ${time}`;
+            data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time.replace(':', '-')}`;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.innerText = 'MENYIMPAN...';
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(res => {
+            msgDiv.className = 'alert success';
+            msgDiv.innerText = res.message;
+            msgDiv.style.display = 'block';
+            e.target.reset(); 
+            
+            // Bersihkan canvas TTD setelah berhasil simpan
+            padOperator.clear();
+            padPemeriksa.clear();
+        })
+        .catch(error => {
+            msgDiv.className = 'alert error';
+            msgDiv.innerText = 'Terjadi kesalahan: ' + error.message;
+            msgDiv.style.display = 'block';
+        })
+        .finally(() => {
+            submitBtn.innerText = 'SIMPAN DATA CHECKLIST';
+            submitBtn.disabled = false;
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    });
+</script>
+</body>
+</html>
