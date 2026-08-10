@@ -45,8 +45,8 @@
                 <input type="month" name="bulan" id="bulanInput" required>
             </div>
             <div class="form-group">
-                <label>Hari / Tanggal & Waktu</label>
-                <input type="datetime-local" name="hariTanggal" id="tanggalInput" required>
+                <label>Hari / Tanggal</label>
+                <input type="date" name="hariTanggal" id="tanggalInput" required>
             </div>
             <div class="form-group">
                 <label>Model</label>
@@ -144,8 +144,8 @@
 </div>
 
 <script>
-    // URL WEB APP ANDA
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwnIwAotAPZsBUWwo9pig5XWi6DcSFrd_7RrXj2zlynfVPorCqPvC1aKHr9CVYOZc_w/exec';
+    // URL WEB APP ANDA YANG TERBARU
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzNUNHy9U7lweO238d0gWq8RQg47LMgyarc2WQ_u5bozytZlawEJVNSbilpIXT50N0owA/exec';
     
     // --- SETUP SIGNATURE PAD ---
     const canvasOperator = document.getElementById('canvasOperator');
@@ -238,15 +238,18 @@
         }
 
         if(data.hariTanggal) {
-            let dt = new Date(data.hariTanggal);
+            let dt = new Date(data.hariTanggal + "T00:00:00"); // Tambah T00:00:00 agar tanggal tidak geser
             let day = dayNames[dt.getDay()];
             let date = dt.getDate();
             let month = monthNames[dt.getMonth()];
             let year = dt.getFullYear();
-            let time = `${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;
             
-            data.hariTanggal = `${day}, ${date} ${month} ${year} ${time}`;
-            data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time.replace(':', '-')}`;
+            data.hariTanggal = `${day}, ${date} ${month} ${year}`;
+            
+            // Buat nama sheet berdasarkan tanggal + waktu saat ini (agar tidak bentrok jika 2x input di hari yg sama)
+            let now = new Date();
+            let time = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}`;
+            data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time}`;
         }
 
         const finalFormData = new FormData();
@@ -261,12 +264,10 @@
         // SOLUSI CORS: Menggunakan mode: 'no-cors'
         fetch(scriptURL, {
             method: 'POST',
-            mode: 'no-cors', // Ini yang mengatasi error CORS
+            mode: 'no-cors',
             body: finalFormData
         })
         .then(response => {
-            // Karena mode no-cors, response tidak bisa dibaca (opaque)
-            // Tapi data sudah pasti terkirim ke Google Spreadsheet
             msgDiv.className = 'alert success';
             msgDiv.innerText = 'Data berhasil disimpan! Sheet baru telah dibuat dengan nama: ' + data.sheetName;
             msgDiv.style.display = 'block';
