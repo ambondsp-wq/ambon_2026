@@ -144,8 +144,8 @@
 </div>
 
 <script>
-    // GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyjO9KUHUppCYp6r3-ZvrYEUKXFAFSYyMXpyJKxY0zMwZMcxRQHZRlgl-SKOwh2HQWM/exec';
+    // URL WEB APP ANDA YANG SUDAH DI DEPLOY
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwnIwAotAPZsBUWwo9pig5XWi6DcSFrd_7RrXj2zlynfVPorCqPvC1aKHr9CVYOZc_w/exec';
     
     // --- SETUP SIGNATURE PAD ---
     const canvasOperator = document.getElementById('canvasOperator');
@@ -253,14 +253,20 @@
             data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time.replace(':', '-')}`;
         }
 
+        // Kemas ulang ke FormData agar bisa dikirim dari file lokal (file://) tanpa CORS error
+        const finalFormData = new FormData();
+        for (const key in data) {
+            finalFormData.append(key, data[key]);
+        }
+
         const submitBtn = e.target.querySelector('button[type="submit"]');
         submitBtn.innerText = 'MENYIMPAN...';
         submitBtn.disabled = true;
 
+        // Kirim menggunakan FormData
         fetch(scriptURL, {
             method: 'POST',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
+            body: finalFormData
         })
         .then(response => response.json())
         .then(res => {
