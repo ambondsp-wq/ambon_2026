@@ -31,7 +31,7 @@
         canvas { width: 100%; height: 150px; cursor: crosshair; }
         .btn-clear { position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; }
 
-        /* ====== CSS BARU: FOTO FORKLIFT ====== */
+        /* ====== CSS BARU: KAMERA LANGSUNG ====== */
         .foto-section {
             background: #f8f9fa;
             padding: 20px;
@@ -43,9 +43,6 @@
         .foto-section h3 {
             text-align: left;
             margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         .foto-section .info-text {
             font-size: 13px;
@@ -56,21 +53,69 @@
             border-radius: 5px;
             border: 1px solid #ffeaa7;
         }
-        .foto-input-wrapper {
-            border: 2px dashed #0056b3;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            background: #fff;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .foto-input-wrapper:hover { background: #e8f4fd; }
-        .foto-input-wrapper input[type="file"] {
+        
+        /* Tombol Buka Kamera */
+        .btn-start-camera {
+            background: #0056b3;
+            color: white;
             border: none;
-            padding: 0;
+            padding: 12px 20px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 5px;
         }
+        .btn-start-camera:hover { background: #004494; }
+
+        /* Container Kamera */
+        .camera-container {
+            display: none;
+            border: 2px solid #0056b3;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            margin-top: 10px;
+            position: relative;
+        }
+        .camera-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .camera-controls {
+            text-align: center;
+            padding: 10px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-capture-photo {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-capture-photo:hover { background: #218838; }
+        .btn-cancel-photo {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-cancel-photo:hover { background: #c82333; }
+
+        /* Preview Foto */
         .foto-preview-container {
             margin-top: 10px;
             position: relative;
@@ -173,37 +218,47 @@
             </div>
         </div>
 
-        <!-- ====== FITUR BARU: FOTO FORKLIFT DENGAN TIMESTAMP ====== -->
+        <!-- ====== FITUR BARU: KAMERA LANGSUNG FOTO FORKLIFT ====== -->
         <div class="foto-section">
-            <h3>📸 FOTO FORKLIFT (dengan Timestamp Otomatis)</h3>
+            <h3>📸 FOTO FORKLIFT (Langsung dari Kamera)</h3>
             <div class="info-text">
-                ⚠️ <strong>Penting:</strong> Foto yang diambil akan otomatis diberi stempel waktu (timestamp) 
-                sebagai bukti pemeriksaan. Pastikan foto menampilkan kondisi forklift secara keseluruhan.
+                ⚠️ <strong>Penting:</strong> Klik tombol "Buka Kamera" untuk mengambil foto secara langsung. 
+                Foto akan otomatis diberi stempel waktu (timestamp) sebagai bukti pemeriksaan.
             </div>
+            
             <div class="header-info">
                 <div class="form-group" style="flex: 1 1 100%;">
-                    <label>Ambil / Upload Foto Forklift *</label>
-                    <div class="foto-input-wrapper" id="fotoInputWrapper">
-                        <input type="file" id="fotoForklift" accept="image/*" capture="environment" style="width: 100%; padding: 10px; border: none;">
+                    <label>Ambil Foto Forklift *</label>
+                    <button type="button" class="btn-start-camera" onclick="startCamera()" id="btnStartCamera">📷 Buka Kamera</button>
+                    
+                    <!-- Area Video Kamera Langsung -->
+                    <div class="camera-container" id="cameraContainer">
+                        <video id="cameraVideo" autoplay playsinline></video>
+                        <div class="camera-controls">
+                            <button type="button" class="btn-capture-photo" onclick="capturePhoto()">📸 Ambil Foto</button>
+                            <button type="button" class="btn-cancel-photo" onclick="stopCamera()">Batal</button>
+                        </div>
                     </div>
+
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button type="button" class="btn-clear-photo" onclick="clearPhoto()" style="display: none;" id="btnClearPhoto">🗑️ Hapus Foto</button>
                         <button type="button" class="btn-retake-photo" onclick="retakePhoto()" style="display: none;" id="btnRetakePhoto">📷 Ambil Ulang</button>
                     </div>
                     <div class="photo-status" id="photoStatus"></div>
                 </div>
+                
                 <div class="form-group" style="flex: 1 1 100%;">
                     <label>Preview Foto (dengan Timestamp)</label>
                     <div class="foto-preview-container">
                         <img id="photoPreview" style="display: none;">
                         <div id="photoPlaceholder">
-                            📷<br><br>Belum ada foto<br>Silakan ambil foto forklift dengan mengklik tombol di atas
+                            📷<br><br>Belum ada foto<br>Klik "Buka Kamera" untuk mulai
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- ====== AKHIR FITUR FOTO FORKLIFT ====== -->
+        <!-- ====== AKHIR FITUR KAMERA ====== -->
 
         <table>
             <thead>
@@ -300,124 +355,121 @@
         if(id === 'canvasPemeriksa') padPemeriksa.clear();
     }
 
-    // ====== FITUR BARU: FOTO FORKLIFT DENGAN TIMESTAMP ======
+    // ====== FITUR KAMERA LANGSUNG ======
     let photoData = null;       // Menyimpan base64 foto dengan timestamp
     let photoTimestamp = null;  // Menyimpan teks timestamp saat foto diambil
+    let stream = null;          // Menyimpan stream kamera
 
-    const fotoInput = document.getElementById('fotoForklift');
+    const video = document.getElementById('cameraVideo');
+    const cameraContainer = document.getElementById('cameraContainer');
+    const btnStartCamera = document.getElementById('btnStartCamera');
     const photoPreview = document.getElementById('photoPreview');
     const photoPlaceholder = document.getElementById('photoPlaceholder');
     const photoStatus = document.getElementById('photoStatus');
     const btnClearPhoto = document.getElementById('btnClearPhoto');
     const btnRetakePhoto = document.getElementById('btnRetakePhoto');
 
-    fotoInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    // Fungsi untuk membuka kamera
+    async function startCamera() {
+        try {
+            // Minta izin akses kamera (belakang jika di HP)
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            video.srcObject = stream;
+            cameraContainer.style.display = 'block';
+            btnStartCamera.style.display = 'none';
+        } catch (err) {
+            alert('Tidak dapat mengakses kamera. Pastikan browser memiliki izin kamera. Error: ' + err.message);
+            console.error("Camera error: ", err);
+        }
+    }
 
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = new Image();
-            img.onload = function() {
-                // Buat canvas untuk menggambar foto + timestamp
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+    // Fungsi untuk mematikan kamera
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+        cameraContainer.style.display = 'none';
+        btnStartCamera.style.display = 'block';
+    }
 
-                // Resize jika terlalu besar (max width 700px)
-                const maxWidth = 700;
-                let width = img.width;
-                let height = img.height;
+    // Fungsi untuk menangkap foto dari stream video
+    function capturePhoto() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-                if (width > maxWidth) {
-                    height = Math.round((height * maxWidth) / width);
-                    width = maxWidth;
-                }
+        // Sesuaikan ukuran canvas dengan video
+        let width = video.videoWidth;
+        let height = video.videoHeight;
 
-                // Tinggi ekstra untuk bar timestamp di bawah
-                const barHeight = 60;
-                canvas.width = width;
-                canvas.height = height + barHeight;
+        // Resize jika terlalu besar (max width 700px)
+        const maxWidth = 700;
+        if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+        }
 
-                // Gambar foto asli
-                ctx.drawImage(img, 0, 0, width, height);
+        // Tinggi ekstra untuk bar header dan footer timestamp
+        const headerHeight = 35;
+        const barHeight = 60;
+        
+        canvas.width = width;
+        canvas.height = height + barHeight + headerHeight;
 
-                // === TIMESTAMP: Bar di bagian BAWAH foto ===
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-                ctx.fillRect(0, height, width, barHeight);
+        // === 1. HEADER ATAS ===
+        ctx.fillStyle = 'rgba(0, 86, 179, 0.9)';
+        ctx.fillRect(0, 0, width, headerHeight);
 
-                ctx.fillStyle = '#00ff88';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('PT. PERTAMINA LUBRICANTS - DSP AMBON', width / 2, headerHeight / 2);
 
-                // Format timestamp
-                const now = new Date();
-                const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-                                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        // === 2. GAMBAR FOTO ===
+        ctx.drawImage(video, 0, headerHeight, width, height);
 
-                const dayName = dayNames[now.getDay()];
-                const day = String(now.getDate()).padStart(2, '0');
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const year = now.getFullYear();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
+        // === 3. TIMESTAMP BAWAH ===
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.fillRect(0, headerHeight + height, width, barHeight);
 
-                photoTimestamp = `${dayName}, ${day}/${month}/${year} - ${hours}:${minutes}:${seconds} WIT`;
+        const now = new Date();
+        const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const dayName = dayNames[now.getDay()];
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
 
-                // Gambar teks timestamp di bar bawah
-                ctx.fillStyle = '#00ff88';
-                ctx.font = 'bold 15px Arial';
-                ctx.fillText(`🕐 ${photoTimestamp}`, width / 2, height + barHeight / 2);
+        photoTimestamp = `${dayName}, ${day}/${month}/${year} - ${hours}:${minutes}:${seconds} WIT`;
 
-                // === TIMESTAMP: Bar di bagian ATAS foto (header) ===
-                const headerHeight = 35;
-                // Gambar ulang dengan header di atas
-                const canvas2 = document.createElement('canvas');
-                const ctx2 = canvas2.getContext('2d');
-                canvas2.width = width;
-                canvas2.height = height + barHeight + headerHeight;
+        ctx.fillStyle = '#00ff88';
+        ctx.font = 'bold 15px Arial';
+        ctx.fillText(`🕐 ${photoTimestamp}`, width / 2, headerHeight + height + barHeight / 2);
 
-                // Background header
-                ctx2.fillStyle = 'rgba(0, 86, 179, 0.9)';
-                ctx2.fillRect(0, 0, width, headerHeight);
+        // Konversi ke base64 JPEG
+        photoData = canvas.toDataURL('image/jpeg', 0.7);
 
-                // Teks header
-                ctx2.fillStyle = '#ffffff';
-                ctx2.font = 'bold 14px Arial';
-                ctx2.textAlign = 'center';
-                ctx2.textBaseline = 'middle';
-                ctx2.fillText('PT. PERTAMINA LUBRICANTS - DSP AMBON', width / 2, headerHeight / 2);
+        // Tampilkan preview
+        photoPreview.src = photoData;
+        photoPreview.style.display = 'block';
+        photoPlaceholder.style.display = 'none';
 
-                // Gambar foto asli
-                ctx2.drawImage(canvas, 0, headerHeight);
+        // Tampilkan status & tombol
+        photoStatus.className = 'photo-status success';
+        photoStatus.innerHTML = `✓ Foto berhasil diambil dengan timestamp: <br><strong>${photoTimestamp}</strong>`;
+        btnClearPhoto.style.display = 'inline-block';
+        btnRetakePhoto.style.display = 'inline-block';
 
-                // Konversi ke base64 JPEG (kualitas 0.7 untuk ukuran file yang wajar)
-                photoData = canvas2.toDataURL('image/jpeg', 0.7);
-
-                // Tampilkan preview
-                photoPreview.src = photoData;
-                photoPreview.style.display = 'block';
-                photoPlaceholder.style.display = 'none';
-
-                // Tampilkan status & tombol
-                photoStatus.className = 'photo-status success';
-                photoStatus.innerHTML = `✓ Foto berhasil diambil dengan timestamp: <br><strong>${photoTimestamp}</strong>`;
-                btnClearPhoto.style.display = 'inline-block';
-                btnRetakePhoto.style.display = 'inline-block';
-                fotoInput.style.display = 'none';
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
+        // Matikan kamera setelah mengambil foto
+        stopCamera();
+    }
 
     function clearPhoto() {
         photoData = null;
         photoTimestamp = null;
-        fotoInput.value = '';
-        fotoInput.style.display = 'block';
         photoPreview.style.display = 'none';
         photoPreview.src = '';
         photoPlaceholder.style.display = 'block';
@@ -425,14 +477,14 @@
         photoStatus.innerHTML = '';
         btnClearPhoto.style.display = 'none';
         btnRetakePhoto.style.display = 'none';
+        stopCamera();
     }
 
     function retakePhoto() {
         clearPhoto();
-        // Trigger klik pada input file
-        fotoInput.click();
+        startCamera();
     }
-    // ====== AKHIR FITUR FOTO FORKLIFT ======
+    // ====== AKHIR FITUR KAMERA ======
 
     // --- SETUP TABEL CHECKLIST ---
     const checklistData = [
@@ -484,10 +536,9 @@
             return;
         }
 
-        // ====== VALIDASI FOTO ======
+        // Validasi Foto
         if (!photoData) {
             alert("Harap ambil foto forklift terlebih dahulu!");
-            // Scroll ke section foto
             document.querySelector('.foto-section').scrollIntoView({ behavior: 'smooth' });
             return;
         }
@@ -504,7 +555,7 @@
         data.ttdOperator = padOperator.toDataURL('image/png');
         data.ttdPemeriksa = padPemeriksa.toDataURL('image/png');
 
-        // ====== TAMBAH DATA FOTO ======
+        // Data Foto
         data.fotoForklift = photoData;
         data.photoTimestamp = photoTimestamp;
 
