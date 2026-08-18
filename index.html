@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist Pemeriksaan Forklift</title>
-    <!-- Library untuk TTD Canvas -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
@@ -26,153 +25,33 @@
         .emisi-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 20px; }
         .nab-text { font-size: 13px; color: #6c757d; display: flex; align-items: center; height: 100%; padding-top: 25px;}
         
-        /* CSS untuk Signature Pad */
         .signature-box { border: 2px dashed #ccc; border-radius: 5px; margin-top: 5px; position: relative; background: #fff; }
         canvas { width: 100%; height: 150px; cursor: crosshair; }
         .btn-clear { position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; }
 
-        /* ====== CSS BARU: KAMERA LANGSUNG ====== */
-        .foto-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #0056b3;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .foto-section h3 {
-            text-align: left;
-            margin-top: 0;
-        }
-        .foto-section .info-text {
-            font-size: 13px;
-            color: #6c757d;
-            margin-bottom: 15px;
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ffeaa7;
-        }
+        .foto-section { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #0056b3; margin-top: 20px; margin-bottom: 10px; }
+        .foto-section h3 { text-align: left; margin-top: 0; }
+        .foto-section .info-text { font-size: 13px; color: #6c757d; margin-bottom: 15px; background: #fff3cd; padding: 10px; border-radius: 5px; border: 1px solid #ffeaa7; }
         
-        /* Tombol Buka Kamera */
-        .btn-start-camera {
-            background: #0056b3;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 5px;
-        }
+        .btn-start-camera { background: #0056b3; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 5px; }
         .btn-start-camera:hover { background: #004494; }
 
-        /* Container Kamera */
-        .camera-container {
-            display: none;
-            border: 2px solid #0056b3;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #000;
-            margin-top: 10px;
-            position: relative;
-        }
-        .camera-container video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .camera-controls {
-            text-align: center;
-            padding: 10px;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-capture-photo {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .camera-container { display: none; border: 2px solid #0056b3; border-radius: 8px; overflow: hidden; background: #000; margin-top: 10px; position: relative; }
+        .camera-container video { width: 100%; height: auto; display: block; }
+        .camera-controls { text-align: center; padding: 10px; background: #fff; display: flex; justify-content: center; gap: 10px; }
+        .btn-capture-photo { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .btn-capture-photo:hover { background: #218838; }
-        .btn-cancel-photo {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .btn-cancel-photo { background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; }
         .btn-cancel-photo:hover { background: #c82333; }
 
-        /* Preview Foto */
-        .foto-preview-container {
-            margin-top: 10px;
-            position: relative;
-        }
-        #photoPreview {
-            max-width: 100%;
-            border-radius: 8px;
-            border: 2px solid #28a745;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        #photoPlaceholder {
-            padding: 80px 20px;
-            text-align: center;
-            color: #999;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            background: #fafafa;
-            font-size: 15px;
-        }
-        .photo-status {
-            margin-top: 10px;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: bold;
-            display: none;
-        }
-        .photo-status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        .btn-clear-photo {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+        .foto-preview-container { margin-top: 10px; position: relative; }
+        #photoPreview { max-width: 100%; border-radius: 8px; border: 2px solid #28a745; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        #photoPlaceholder { padding: 80px 20px; text-align: center; color: #999; border: 2px dashed #ccc; border-radius: 8px; background: #fafafa; font-size: 15px; }
+        .photo-status { margin-top: 10px; padding: 8px 12px; border-radius: 5px; font-size: 13px; font-weight: bold; display: none; }
+        .photo-status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+        .btn-clear-photo { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 13px; margin-top: 10px; font-weight: bold; }
         .btn-clear-photo:hover { background: #c82333; }
-        .btn-retake-photo {
-            background: #ffc107;
-            color: #333;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 10px;
-            margin-left: 10px;
-            font-weight: bold;
-        }
+        .btn-retake-photo { background: #ffc107; color: #333; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 13px; margin-top: 10px; margin-left: 10px; font-weight: bold; }
         .btn-retake-photo:hover { background: #e0a800; }
     </style>
 </head>
@@ -218,7 +97,6 @@
             </div>
         </div>
 
-        <!-- ====== FITUR BARU: KAMERA LANGSUNG FOTO FORKLIFT ====== -->
         <div class="foto-section">
             <h3>📸 FOTO FORKLIFT (Langsung dari Kamera)</h3>
             <div class="info-text">
@@ -231,7 +109,6 @@
                     <label>Ambil Foto Forklift *</label>
                     <button type="button" class="btn-start-camera" onclick="startCamera()" id="btnStartCamera">📷 Buka Kamera</button>
                     
-                    <!-- Area Video Kamera Langsung -->
                     <div class="camera-container" id="cameraContainer">
                         <video id="cameraVideo" autoplay playsinline></video>
                         <div class="camera-controls">
@@ -258,7 +135,6 @@
                 </div>
             </div>
         </div>
-        <!-- ====== AKHIR FITUR KAMERA ====== -->
 
         <table>
             <thead>
@@ -271,7 +147,6 @@
             <tbody id="checklistBody"></tbody>
         </table>
 
-        <!-- FORM UJI EMISI -->
         <div class="emisi-box">
             <h3 style="text-align: left; margin-top: 0;">HASIL UJI EMISI FORKLIFT</h3>
             <p style="margin-top: 0; font-weight: bold; font-size: 14px;">REF : KEPMENLH NO. KEP-35/MENLH/10/1993</p>
@@ -300,7 +175,6 @@
             </div>
         </div>
 
-        <!-- FORM TANDA TANGAN -->
         <h3 style="text-align: left; margin-top: 20px;">Persetujuan & Tanda Tangan</h3>
         <div class="header-info">
             <div class="form-group">
@@ -330,8 +204,7 @@
 </div>
 
 <script>
-    // URL WEB APP ANDA YANG TERBARU
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw-7ookPuoJhobpYvgQ78K8PrgmRb-ooFgxiYYfX0fztzJTuIJX-mjQ0DxEYtBx0oA5/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzNUNHy9U7lweO238d0gWq8RQg47LMgyarc2WQ_u5bozytZlawEJVNSbilpIXT50N0owA/exec';
     
     // --- SETUP SIGNATURE PAD ---
     const canvasOperator = document.getElementById('canvasOperator');
@@ -356,9 +229,9 @@
     }
 
     // ====== FITUR KAMERA LANGSUNG ======
-    let photoData = null;       // Menyimpan base64 foto dengan timestamp
-    let photoTimestamp = null;  // Menyimpan teks timestamp saat foto diambil
-    let stream = null;          // Menyimpan stream kamera
+    let photoData = null;       
+    let photoTimestamp = null;  
+    let stream = null;          
 
     const video = document.getElementById('cameraVideo');
     const cameraContainer = document.getElementById('cameraContainer');
@@ -369,10 +242,8 @@
     const btnClearPhoto = document.getElementById('btnClearPhoto');
     const btnRetakePhoto = document.getElementById('btnRetakePhoto');
 
-    // Fungsi untuk membuka kamera
     async function startCamera() {
         try {
-            // Minta izin akses kamera (belakang jika di HP)
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
             video.srcObject = stream;
             cameraContainer.style.display = 'block';
@@ -383,7 +254,6 @@
         }
     }
 
-    // Fungsi untuk mematikan kamera
     function stopCamera() {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
@@ -393,43 +263,38 @@
         btnStartCamera.style.display = 'block';
     }
 
-    // Fungsi untuk menangkap foto dari stream video
     function capturePhoto() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
-        // Sesuaikan ukuran canvas dengan video
         let width = video.videoWidth;
         let height = video.videoHeight;
 
-        // Resize jika terlalu besar (max width 700px)
         const maxWidth = 700;
         if (width > maxWidth) {
             height = Math.round((height * maxWidth) / width);
             width = maxWidth;
         }
 
-        // Tinggi ekstra untuk bar header dan footer timestamp
         const headerHeight = 35;
         const barHeight = 60;
         
         canvas.width = width;
         canvas.height = height + barHeight + headerHeight;
 
-        // === 1. HEADER ATAS ===
+        // Header
         ctx.fillStyle = 'rgba(0, 86, 179, 0.9)';
         ctx.fillRect(0, 0, width, headerHeight);
-
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('PT. PERTAMINA LUBRICANTS - DSP AMBON', width / 2, headerHeight / 2);
 
-        // === 2. GAMBAR FOTO ===
+        // Gambar Foto
         ctx.drawImage(video, 0, headerHeight, width, height);
 
-        // === 3. TIMESTAMP BAWAH ===
+        // Footer Timestamp
         ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
         ctx.fillRect(0, headerHeight + height, width, barHeight);
 
@@ -449,8 +314,8 @@
         ctx.font = 'bold 15px Arial';
         ctx.fillText(`🕐 ${photoTimestamp}`, width / 2, headerHeight + height + barHeight / 2);
 
-        // Konversi ke base64 JPEG
-        photoData = canvas.toDataURL('image/jpeg', 0.7);
+        // Konversi ke base64 JPEG (Kualitas 0.5 agar lebih ringan dan cepat terkirim)
+        photoData = canvas.toDataURL('image/jpeg', 0.5);
 
         // Tampilkan preview
         photoPreview.src = photoData;
@@ -484,7 +349,6 @@
         clearPhoto();
         startCamera();
     }
-    // ====== AKHIR FITUR KAMERA ======
 
     // --- SETUP TABEL CHECKLIST ---
     const checklistData = [
@@ -530,13 +394,11 @@
     document.getElementById('checklistForm').addEventListener('submit', e => {
         e.preventDefault();
         
-        // Validasi TTD
         if (padOperator.isEmpty() || padPemeriksa.isEmpty()) {
             alert("Harap isi kedua Tanda Tangan terlebih dahulu!");
             return;
         }
 
-        // Validasi Foto
         if (!photoData) {
             alert("Harap ambil foto forklift terlebih dahulu!");
             document.querySelector('.foto-section').scrollIntoView({ behavior: 'smooth' });
@@ -551,11 +413,8 @@
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
 
-        // TTD
         data.ttdOperator = padOperator.toDataURL('image/png');
         data.ttdPemeriksa = padPemeriksa.toDataURL('image/png');
-
-        // Data Foto
         data.fotoForklift = photoData;
         data.photoTimestamp = photoTimestamp;
 
@@ -581,19 +440,18 @@
             data.sheetName = `${date}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${year}_${time}`;
         }
 
-        const finalFormData = new FormData();
-        for (const key in data) {
-            finalFormData.append(key, data[key]);
-        }
-
         const submitBtn = e.target.querySelector('button[type="submit"]');
         submitBtn.innerText = 'MENYIMPAN...';
         submitBtn.disabled = true;
 
+        // ====== PERUBAHAN UTAMA: Kirim sebagai JSON String ======
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
-            body: finalFormData
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(data)
         })
         .then(response => {
             msgDiv.className = 'alert success';
@@ -603,8 +461,6 @@
             
             padOperator.clear();
             padPemeriksa.clear();
-
-            // Reset foto
             clearPhoto();
         })
         .catch(error => {
