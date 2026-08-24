@@ -204,7 +204,8 @@
 </div>
 
 <script>
-    const scriptURL = 'hhttps://script.google.com/macros/s/AKfycbxKEGK3GYy-U-DwCQIT1-f5P_Sr791H-n5lYKZV8JxNU5maqfStZ8E0szSCA020YFb6/exec';
+    // URL PERBAHAN: Huruf 'h' ganda telah dihilangkan menjadi 'https'
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxKEGK3GYy-U-DwCQIT1-f5P_Sr791H-n5lYKZV8JxNU5maqfStZ8E0szSCA020YFb6/exec';
     
     // --- SETUP SIGNATURE PAD ---
     const canvasOperator = document.getElementById('canvasOperator');
@@ -444,7 +445,7 @@
         submitBtn.innerText = 'MENYIMPAN...';
         submitBtn.disabled = true;
 
-        // ====== PERUBAHAN UTAMA: Kirim sebagai JSON String ======
+        // ====== KIRIM SEBAGAI JSON STRING ======
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
